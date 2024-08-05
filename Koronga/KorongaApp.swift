@@ -6,12 +6,26 @@
 //
 
 import SwiftUI
+import FamilyControls
+import os
 
 @main
 struct KorongaApp: App {
+    @StateObject private var appUsageController = AppUsageController()
+    
+    init() {
+        let logger = Logger(subsystem: "com.yourdomain.Koronga", category: "App")
+        logger.info("App initializing")
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(appUsageController)
+                .onAppear {
+                    let logger = Logger(subsystem: "com.yourdomain.Koronga", category: "App")
+                    logger.info("ContentView appeared")
+                }
         }
     }
 }

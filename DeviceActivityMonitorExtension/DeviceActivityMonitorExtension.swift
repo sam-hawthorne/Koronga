@@ -6,43 +6,51 @@
 //
 
 import DeviceActivity
+import ManagedSettings
+import FamilyControls
+import UserNotifications
 
-// Optionally override any of the functions below.
-// Make sure that your class name matches the NSExtensionPrincipalClass in your Info.plist.
 class DeviceActivityMonitorExtension: DeviceActivityMonitor {
     override func intervalDidStart(for activity: DeviceActivityName) {
         super.intervalDidStart(for: activity)
         
-        // Handle the start of the interval.
+        // Start monitoring and restricting apps
+        let store = ManagedSettingsStore()
+        if let selectedApps = UserDefaults.standard.data(forKey: "SelectedApps"),
+           let selection = try? JSONDecoder().decode(FamilyActivitySelection.self, from: selectedApps) {
+            store.shield.applications = selection.applicationTokens
+        }
     }
     
     override func intervalDidEnd(for activity: DeviceActivityName) {
         super.intervalDidEnd(for: activity)
         
-        // Handle the end of the interval.
+        // End restrictions
+        let store = ManagedSettingsStore()
+        store.shield.applications = nil
+        
+        // Provide a summary or reward
+        sendNotification(title: "Great job!", body: "You've completed your focus session.")
     }
     
     override func eventDidReachThreshold(_ event: DeviceActivityEvent.Name, activity: DeviceActivityName) {
-        super.eventDidReachThreshold(event, activity: activity)
-        
-        // Handle the event reaching its threshold.
+        // Handle threshold reached events if needed
     }
     
     override func intervalWillStartWarning(for activity: DeviceActivityName) {
-        super.intervalWillStartWarning(for: activity)
-        
-        // Handle the warning before the interval starts.
+        // Handle interval start warnings if needed
     }
     
     override func intervalWillEndWarning(for activity: DeviceActivityName) {
-        super.intervalWillEndWarning(for: activity)
-        
-        // Handle the warning before the interval ends.
+        // Handle interval end warnings if needed
     }
     
-    override func eventWillReachThresholdWarning(_ event: DeviceActivityEvent.Name, activity: DeviceActivityName) {
-        super.eventWillReachThresholdWarning(event, activity: activity)
+    private func sendNotification(title: String, body: String) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
         
-        // Handle the warning before the event reaches its threshold.
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request)
     }
 }

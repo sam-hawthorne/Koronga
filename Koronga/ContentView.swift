@@ -2,23 +2,24 @@
 //  ContentView.swift
 //  Koronga
 //
-//  Created by Sam Hawthorne on 2024-07-16.
+//  Created by Sam Hawthorne on 2024-08-04.
 //
-
+//
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var controller = AppUsageController()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            VStack {
+                DeviceActivityReportView(controller: controller)
+                
+                Button("Select Apps") {
+                    controller.presentActivitySelection()
+                }
+            }
+            .navigationTitle("App Usage")
         }
-        .padding()
     }
-}
-
-#Preview {
-    ContentView()
 }
