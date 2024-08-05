@@ -99,6 +99,52 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6B43CE9F2C6063F20086201E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ShieldView.swift,
+			);
+			target = 6B01D2922C47293F00ABB7BD /* Koronga */;
+		};
+		6B43CEA12C60649C0086201E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ApplicationProfile.swift,
+				CoreDataManager.swift,
+				ShieldManager.swift,
+			);
+			target = 6B01D2922C47293F00ABB7BD /* Koronga */;
+		};
+		6B43CEB82C606B880086201E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ApplicationProfile.swift,
+				CoreDataManager.swift,
+			);
+			target = 6B01D2C42C472A9400ABB7BD /* ShieldActionExtension */;
+		};
+		6B43CEB92C606B880086201E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ApplicationProfile.swift,
+				CoreDataManager.swift,
+			);
+			target = 6B01D2D82C472AB900ABB7BD /* DeviceActivityMonitorExtension */;
+		};
+		6B43CEBE2C606E5A0086201E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ApplicationProfileModel.xcdatamodeld,
+			);
+			target = 6B01D2C42C472A9400ABB7BD /* ShieldActionExtension */;
+		};
+		6B43CEBF2C606E5A0086201E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ApplicationProfileModel.xcdatamodeld,
+			);
+			target = 6B01D2D82C472AB900ABB7BD /* DeviceActivityMonitorExtension */;
+		};
 		6B9E4C3C2C601B2100780289 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -109,6 +155,7 @@
 		6B9E4C3E2C601B9500780289 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				ApplicationProfileModel.xcdatamodeld,
 				AppUsageModel.swift,
 			);
 			target = 6B01D2922C47293F00ABB7BD /* Koronga */;
@@ -116,9 +163,9 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6B9E4C052C50D6C300780289 /* Components */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Components; sourceTree = "<group>"; };
-		6B9E4C0C2C50DB8200780289 /* Models */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6B9E4C3E2C601B9500780289 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Models; sourceTree = "<group>"; };
-		6B9E4C2F2C60165000780289 /* Views */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Views; sourceTree = "<group>"; };
+		6B9E4C052C50D6C300780289 /* Components */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6B43CEA12C60649C0086201E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 6B43CEB82C606B880086201E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 6B43CEB92C606B880086201E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Components; sourceTree = "<group>"; };
+		6B9E4C0C2C50DB8200780289 /* Models */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6B9E4C3E2C601B9500780289 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 6B43CEBE2C606E5A0086201E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 6B43CEBF2C606E5A0086201E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Models; sourceTree = "<group>"; };
+		6B9E4C2F2C60165000780289 /* Views */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6B43CE9F2C6063F20086201E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Views; sourceTree = "<group>"; };
 		6B9E4C302C60165D00780289 /* Controllers */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6B9E4C3C2C601B2100780289 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Controllers; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 

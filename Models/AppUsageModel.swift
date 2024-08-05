@@ -16,6 +16,8 @@ struct AppUsageModel: Identifiable, Equatable {
     var displayName: String
     var usageTime: TimeInterval
     var isRestricted: Bool
+    var dailyGoal: TimeInterval?
+    var weeklyGoal: TimeInterval?
     
     static func == (lhs: AppUsageModel, rhs: AppUsageModel) -> Bool {
         lhs.id == rhs.id

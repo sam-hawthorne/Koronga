@@ -13,19 +13,20 @@ import SwiftUI
 
 class AppUsageController: ObservableObject {
     @Published var selectedApps: [AppUsageModel] = []
+    @Published var selection = FamilyActivitySelection()
+    
     private let store = ManagedSettingsStore()
     private let center = DeviceActivityCenter()
-    @Published var selection = FamilyActivitySelection()
+    private let coreDataManager = CoreDataManager.shared
     
     private let dailyActivityName = DeviceActivityName("daily")
 
     init() {
-        print("AppUsageController initialized")
         setupMonitoring()
+        loadSelectedApps()
     }
 
     private func setupMonitoring() {
-        print("Setting up monitoring")
         let schedule = DeviceActivitySchedule(
             intervalStart: DateComponents(hour: 0, minute: 0),
             intervalEnd: DateComponents(hour: 23, minute: 59),
@@ -33,18 +34,26 @@ class AppUsageController: ObservableObject {
         )
         
         do {
-            print("Monitoring started successfully")
             try center.startMonitoring(dailyActivityName, during: schedule)
         } catch {
             print("Failed to start monitoring: \(error)")
         }
     }
 
-    func fetchSelectedApps() {
-        selectedApps = selection.applicationTokens.map { token in
-            let displayName = getApplicationDisplayName(for: token)
-            return AppUsageModel(application: token, displayName: displayName, usageTime: 0, isRestricted: false)
+    func loadSelectedApps() {
+        let savedTokenIdentifiers = Set(coreDataManager.fetchApplicationProfiles())
+        
+        if let selectionData = UserDefaults.standard.data(forKey: "FamilyActivitySelection"),
+           let savedSelection = try? JSONDecoder().decode(FamilyActivitySelection.self, from: selectionData) {
+            self.selection = savedSelection
         }
+        
+        self.selectedApps = selection.applicationTokens
+            .filter { savedTokenIdentifiers.contains("\($0.hashValue)") }
+            .map { token in
+                let displayName = getApplicationDisplayName(for: token)
+                return AppUsageModel(application: token, displayName: displayName, usageTime: 0, isRestricted: false)
+            }
     }
 
     private func getApplicationDisplayName(for token: ApplicationToken) -> String {
@@ -66,44 +75,52 @@ class AppUsageController: ObservableObject {
         store.shield.applications = restrictedApps.isEmpty ? nil : restrictedApps
     }
 
-    func presentActivitySelection() {
-            Task {
-                await MainActor.run {
-                    let picker = FamilyActivityPicker(selection: Binding(
-                        get: { self.selection },
-                        set: { newValue in
-                            self.selection = newValue
-                            self.fetchSelectedApps()
-                        }
-                    ))
-                    if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                       let window = scene.windows.first {
-                        let hostingController = UIHostingController(rootView: picker)
-                        window.rootViewController?.present(hostingController, animated: true)
-                    }
-                }
-            }
+    func saveSelectedApps() {
+        if let encodedData = try? JSONEncoder().encode(selection) {
+            UserDefaults.standard.set(encodedData, forKey: "FamilyActivitySelection")
         }
-}
+        
+        for app in selectedApps {
+            let profile = ApplicationProfile(applicationToken: app.application)
+            coreDataManager.saveApplicationProfile(profile)
+        }
+        
+        updateRestrictions()
+    }
 
-struct DeviceActivityReportView: View {
-    @ObservedObject var controller: AppUsageController
-    
-    var body: some View {
-        DeviceActivityReport(DeviceActivityReport.Context("daily"), filter: DeviceActivityFilter(
-            segment: .daily(during: Calendar.current.dateInterval(of: .day, for: Date())!),
-            users: .all,
-            devices: .init([.iPhone, .iPad])
-        ))
-        .onAppear {
-            // You might want to update your controller's data here
-            // or use a custom DeviceActivityReportExtension to handle the data
+    func setDailyGoal(for app: AppUsageModel, goal: TimeInterval) {
+        if let index = selectedApps.firstIndex(where: { $0.id == app.id }) {
+            selectedApps[index].dailyGoal = goal
         }
     }
+
+    func setWeeklyGoal(for app: AppUsageModel, goal: TimeInterval) {
+        if let index = selectedApps.firstIndex(where: { $0.id == app.id }) {
+            selectedApps[index].weeklyGoal = goal
+        }
+    }
+    
+    // MARK: - Family Activity Selection Handling
+    
+    func updateSelectionAndSave() {
+        // Update the selection based on the current selectedApps
+        let updatedTokens = Set(selectedApps.map { $0.application })
+        selection.applicationTokens = updatedTokens
+        
+        // Save the updated selection
+        saveSelectedApps()
+    }
+    
+    // MARK: - Device Activity Reporting
+    
+    func fetchDeviceActivityReport(for dateInterval: DateInterval) {
+        // Implement fetching of device activity report
+        // This will depend on how you've set up your DeviceActivityMonitorExtension
+    }
+    
+    // MARK: - Utility Methods
+    
+    func getAppUsageModel(for token: ApplicationToken) -> AppUsageModel? {
+        return selectedApps.first { $0.application == token }
+    }
 }
-
-
-
-
-
-

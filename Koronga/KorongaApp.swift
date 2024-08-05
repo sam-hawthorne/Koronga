@@ -16,15 +16,24 @@ struct KorongaApp: App {
     init() {
         let logger = Logger(subsystem: "com.yourdomain.Koronga", category: "App")
         logger.info("App initializing")
+        
+        Task {
+            do {
+                try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
+                logger.info("Authorization requested successfully")
+            } catch {
+                logger.error("Failed to request authorization: \(error.localizedDescription)")
+            }
+        }
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ShieldView()
                 .environmentObject(appUsageController)
                 .onAppear {
                     let logger = Logger(subsystem: "com.yourdomain.Koronga", category: "App")
-                    logger.info("ContentView appeared")
+                    logger.info("ShieldView appeared")
                 }
         }
     }
